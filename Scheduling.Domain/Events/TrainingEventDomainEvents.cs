@@ -6,7 +6,7 @@ namespace Scheduling.Domain.Events;
 // Domain events raised by the TrainingEvent aggregate root.
 //
 //   Lifecycle:   TrainingEventCreated, TrainingEventCancelled
-//   Assignments: ResourceAssigned, ResourceUnassigned
+//   Assignments: {Instructor/Trainee/Observer}Assigned , {Instructor/Trainee/Observer}Unassigned
 
 public record TrainingEventCreated(Guid EventId, Guid ProjectId) : DomainEvent;
 

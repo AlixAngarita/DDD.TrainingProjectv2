@@ -1,17 +1,11 @@
 ﻿namespace Scheduling.Domain.Entities;
 
-public class ObserverAssignment : IAssignment<ObserverAssignment>
+public class ObserverAssignment : Assignment
 {
-    public Guid Id { get; set; }
-    public Guid ResourceId { get; set; }
-    private ObserverAssignment(Guid id, Guid resourceId)
-    {
-        Id = id;
-        ResourceId = resourceId;
-    }
+    private ObserverAssignment(Guid id, Guid assigneeId) : base(id, assigneeId) { }
 
-    public static ObserverAssignment Create(Guid resourceId)
+    public static ObserverAssignment Create(Guid assigneeId)
     {
-        return new ObserverAssignment(Guid.NewGuid(), resourceId);
+        return new ObserverAssignment(Guid.NewGuid(), assigneeId);
     }
 }

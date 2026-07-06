@@ -5,7 +5,7 @@ namespace Scheduling.Domain.Values;
 // Value object implementation of title name or name
 public record Title
 {
-    public string Value { get; }
+    public string Value { get; private set; }
     private const int MaxLength = 255;
     
     private Title(string value) => Value = value;

@@ -17,10 +17,10 @@ public class TrainingEvent : AggregateRoot
     public IReadOnlyCollection<TraineeAssignment> TraineeAssignments => traineeAssignments.AsReadOnly();
     public IReadOnlyCollection<ObserverAssignment> ObserverAssignments => observerAssignments.AsReadOnly();
     
-    public Guid Id { get; }
-    public Period Period { get; }
-    public Title Name { get; }
-    public Guid ProjectId { get; }
+    public Guid Id { get; private set; }
+    public Period Period { get; private set; }
+    public Title Name { get; private set; }
+    public Guid ProjectId { get; private set; }
     private ETrainingEventStatus Status { get; set; }
 
     private TrainingEvent(Guid id, Guid projectId, Title name, Period period)
@@ -33,7 +33,7 @@ public class TrainingEvent : AggregateRoot
         ProjectId = projectId;
         Name = name;
         Period = period;
-        Status = ETrainingEventStatus.Normal;
+        Status = ETrainingEventStatus.Confirmed;
     }
     
     public static TrainingEvent Create(Guid projectId, Title name, Period period)
@@ -43,15 +43,14 @@ public class TrainingEvent : AggregateRoot
         return trainingEvent;
     }
 
-    public InstructorAssignment AssignInstructor(Guid resourceId)
+    public InstructorAssignment AssignInstructor(Guid assigneeId)
     {
-        if (Status != ETrainingEventStatus.Normal)
-            throw new DomainException("Cannot assign an instructor to a cancelled training event.");
+        MustBeConfirmedEvent();
         
-        if (HasInstructorWithResource(resourceId))
+        if (HasInstructorWithResource(assigneeId))
             throw new DomainException("An instructor cannot be assigned more than once per event.");
         
-        var instructorAssignment = InstructorAssignment.Create(resourceId);
+        var instructorAssignment = InstructorAssignment.Create(assigneeId);
         instructorAssignments.Add(instructorAssignment);
         AddDomainEvent(new InstructorAssigned(instructorAssignment));
         return instructorAssignment;
@@ -65,15 +64,14 @@ public class TrainingEvent : AggregateRoot
         AddDomainEvent(new InstructorUnassigned(assignment));
     }
     
-    public TraineeAssignment AssignTrainee(Guid resourceId)
+    public TraineeAssignment AssignTrainee(Guid assigneeId)
     {
-        if (Status != ETrainingEventStatus.Normal)
-            throw new DomainException("Cannot assign a trainee to a cancelled training event.");
+        MustBeConfirmedEvent();
         
-        if (HasTraineeWithResource(resourceId))
+        if (HasTraineeWithResource(assigneeId))
             throw new DomainException("A trainee cannot be assigned more than once per event.");
         
-        var traineeAssignment = TraineeAssignment.Create(resourceId);
+        var traineeAssignment = TraineeAssignment.Create(assigneeId);
         traineeAssignments.Add(traineeAssignment);
         AddDomainEvent(new TraineeAssigned(traineeAssignment));
         return traineeAssignment;
@@ -87,15 +85,14 @@ public class TrainingEvent : AggregateRoot
         AddDomainEvent(new TraineeUnassigned(assignment));
     }
     
-    public ObserverAssignment AssignObserver(Guid resourceId)
+    public ObserverAssignment AssignObserver(Guid assigneeId)
     {
-        if (Status != ETrainingEventStatus.Normal)
-            throw new DomainException("Cannot assign an observer to a cancelled training event.");
+        MustBeConfirmedEvent();
         
-        if (HasObserverWithResource(resourceId))
+        if (HasObserverWithResource(assigneeId))
             throw new DomainException("An observer cannot be assigned more than once per event.");
         
-        var observerAssignment = ObserverAssignment.Create(resourceId);
+        var observerAssignment = ObserverAssignment.Create(assigneeId);
         observerAssignments.Add(observerAssignment);
         AddDomainEvent(new ObserverAssigned(observerAssignment));
         return observerAssignment;
@@ -115,14 +112,20 @@ public class TrainingEvent : AggregateRoot
         AddDomainEvent(new TrainingEventCancelled(Id));
     }
     
-    public bool HasInstructorWithResource(Guid resourceId) => instructorAssignments.Any(a => a.ResourceId == resourceId);
-    public bool HasTraineeWithResource(Guid resourceId) => traineeAssignments.Any(a => a.ResourceId == resourceId);
-    public bool HasObserverWithResource(Guid resourceId) => observerAssignments.Any(a => a.ResourceId == resourceId);
+    private void MustBeConfirmedEvent()
+    {
+        if (Status != ETrainingEventStatus.Confirmed)
+            throw new DomainException("Cannot assign an observer to a cancelled training event.");
+    }
+    
+    public bool HasInstructorWithResource(Guid assigneeId) => instructorAssignments.Any(a => a.AssigneeId == assigneeId);
+    public bool HasTraineeWithResource(Guid assigneeId) => traineeAssignments.Any(a => a.AssigneeId == assigneeId);
+    public bool HasObserverWithResource(Guid assigneeId) => observerAssignments.Any(a => a.AssigneeId == assigneeId);
 }
 
 public enum ETrainingEventStatus
 {
-    Normal,
+    Confirmed,
     Cancelled,
     Deleted
 }

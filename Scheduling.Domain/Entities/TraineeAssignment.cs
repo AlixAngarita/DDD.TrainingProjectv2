@@ -1,17 +1,11 @@
 ﻿namespace Scheduling.Domain.Entities;
 
-public class TraineeAssignment : IAssignment<TraineeAssignment>
+public class TraineeAssignment : Assignment
 {
-    public Guid Id { get; set; }
-    public Guid ResourceId { get; set; }
-    private TraineeAssignment(Guid id, Guid resourceId)
-    {
-        Id = id;
-        ResourceId = resourceId;
-    }
+    private TraineeAssignment(Guid id, Guid assigneeId) : base(id, assigneeId) { }
 
-    public static TraineeAssignment Create(Guid resourceId)
+    public static TraineeAssignment Create(Guid assigneeId)
     {
-        return new TraineeAssignment(Guid.NewGuid(), resourceId);
+        return new TraineeAssignment(Guid.NewGuid(), assigneeId);
     }
 }

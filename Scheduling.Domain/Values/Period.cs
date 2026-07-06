@@ -8,8 +8,8 @@ namespace Scheduling.Domain.Values;
 
 public record Period
 {
-    public DateTime StartDate { get; }
-    public DateTime EndDate { get; }
+    public DateTime StartDate { get; private set; }
+    public DateTime EndDate { get; private set; }
     private static readonly TimeSpan MaxDuration = TimeSpan.FromDays(366);
     
     private Period(DateTime startDate, DateTime endDate)

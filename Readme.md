@@ -101,16 +101,7 @@ If-Match: "5"
 ETag: "8"
 ```
 
-**POST**   `/training-events/{id}/instructors/batch-get` Get a list of instructors in a training event
-#### Request:
-```json
-{
-  "items": [
-    { "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6" },
-    { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" }
-  ]
-}
-```
+**GET**   `/training-events/{id}/instructors` Get the list of instructors for a training event
 #### Response:
 ```json
 200 OK
@@ -123,19 +114,19 @@ ETag: "8"
       "etag": "16"
     }
   ],
-  "notFound": [
-    { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" }
-  ]
+  "totalElements": 1, 
+  "totalPages": 1, 
+  "pageNumber": 1
 }
 ```
 
-**POST**   `/training-events/{id}/trainees/batch-get`	Get a list of trainees in a training event
+**GET**   `/training-events/{id}/trainees`	Get the list of trainees for a training event
 
-Same example as `/training-events/{id}/instructors/batch-get`
+Same example as `/training-events/{id}/instructors`
 
-**POST**   `/training-events/{id}/observers/batch-get`	Get a list of observers in a training event
+**GET**   `/training-events/{id}/observers`	Get the list of observers for a training event
 
-Same example as `/training-events/{id}/instructors/batch-get`
+Same example as `/training-events/{id}/instructors`
 
 **POST**   `/training-events/{id}/instructors/assign`	Assign one or multiple instructors to a training event
 #### Request:

@@ -1,6 +1,6 @@
 # Training event potential endpoints
 
-**GET**    `/training-events/{id}`
+**GET**    `/training-events/{id}`	Get a single training event
 #### Response:
 ```json
 200 OK
@@ -16,7 +16,7 @@ ETag: "5"
 }
 ```
 
-**POST**   `/training-events/batch-get`
+**POST**   `/training-events/batch-get` Get multiple training events
 #### Request:
 ```json
 { 
@@ -47,7 +47,7 @@ ETag: "5"
 }
 ```
 
-**POST**   `/training-events`
+**POST**   `/training-events` Create a new single training event
 #### Request:
 ```json
 {
@@ -66,7 +66,7 @@ ETag: "5"
 }
 ```
 
-**PUT**   `/training-events/{id}`
+**PUT**   `/training-events/{id}` Modify an existing training event
 #### Request:
 ```json
 If-Match: "5"
@@ -80,7 +80,7 @@ If-Match: "5"
 ETag: "6"
 ```
 
-**DELETE**   `/training-events/{id}`
+**DELETE**   `/training-events/{id}` Delete an existing training event
 #### Request:
 ```json
 If-Match: "5"
@@ -90,7 +90,7 @@ If-Match: "5"
 204 No Content
 ```
 
-**POST**   `/training-events/{id}/cancel`
+**POST**   `/training-events/{id}/cancel` Cancel a training event
 #### Request:
 ```json
 If-Match: "5"
@@ -101,7 +101,7 @@ If-Match: "5"
 ETag: "8"
 ```
 
-**POST**   `/training-events/{id}/instructors/batch-get`
+**POST**   `/training-events/{id}/instructors/batch-get` Get a list of instructors in a training event
 #### Request:
 ```json
 {
@@ -129,13 +129,15 @@ ETag: "8"
 }
 ```
 
-**POST**   `/training-events/{id}/trainees/batch-get`
+**POST**   `/training-events/{id}/trainees/batch-get`	Get a list of trainees in a training event
+
 Same example as `/training-events/{id}/instructors/batch-get`
 
-**POST**   `/training-events/{id}/observers/batch-get`
+**POST**   `/training-events/{id}/observers/batch-get`	Get a list of observers in a training event
+
 Same example as `/training-events/{id}/instructors/batch-get`
 
-**POST**   `/training-events/{id}/instructors/assign`
+**POST**   `/training-events/{id}/instructors/assign`	Assign one or multiple instructors to a training event
 #### Request:
 ```json
 {
@@ -155,8 +157,7 @@ Same example as `/training-events/{id}/instructors/batch-get`
 }
 ```
 
-
-**POST**   `/training-events/{id}/trainees/assign`
+**POST**   `/training-events/{id}/trainees/assign`	Assign one or multiple trainees to a training event
 #### Request:
 ```json
 {
@@ -180,10 +181,10 @@ Same example as `/training-events/{id}/instructors/batch-get`
 }
 ```
 
-**POST**   `/training-events/{id}/observers/assign`
+**POST**   `/training-events/{id}/observers/assign` Assign one or multiple observers to a training event
 Same example as `/training-events/{id}/trainees/assign`
 
-**POST**   `/training-events/{id}/instructors/unassign`
+**POST**   `/training-events/{id}/instructors/unassign`	Unassign one or multiple instructors to a training event
 #### Request:
 ```json
 {
@@ -209,8 +210,10 @@ Same example as `/training-events/{id}/trainees/assign`
 }
 ```
 
-**POST**   `/training-events/{id}/trainees/unassign`
+**POST**   `/training-events/{id}/trainees/unassign`	Unassign one or multiple trainees to a training event
+
 Same example as `/training-events/{id}/instructors/unassign`
 
-**POST**   `/training-events/{id}/observers/unassign`
+**POST**   `/training-events/{id}/observers/unassign`	Unassign one or multiple observers to a training event
+
 Same example as `/training-events/{id}/instructors/unassign`

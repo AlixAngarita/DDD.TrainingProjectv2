@@ -31,19 +31,20 @@ ETag: "5"
 200 OK
 
 {
-  "content": [
-		{ "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
-	     "startDate": "2026-10-10T14:00:00Z", 
-		  "endDate": "2026-10-10T16:00:00Z",
-		  "name": "A320 Training",
-		  "projectId": "de802551-2c47-4323-9779-d74876aa0c3f",
-		  "status": "Confirmed",
-		  "etag": "12"
-	   }
-  ],
-  "notFound": [
-    { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" }
-  ]
+    "content": [
+        {
+            "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6", 
+            "startDate": "2026-10-10T14:00:00Z", 
+            "endDate": "2026-10-10T16:00:00Z", 
+            "name": "A320 Training", 
+            "projectId": "de802551-2c47-4323-9779-d74876aa0c3f", 
+            "status": "Confirmed", 
+            "etag": "12"
+        }
+    ],
+    "notFound": [
+        { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" }
+    ]
 }
 ```
 
@@ -128,7 +129,7 @@ Same example as `/training-events/{id}/instructors`
 
 Same example as `/training-events/{id}/instructors`
 
-**POST**   `/training-events/{id}/instructors/assign`	Assign one or multiple instructors to a training event
+**POST**   `/training-events/{id}/instructors`	Assign one or multiple instructors to a training event
 #### Request:
 ```json
 {
@@ -148,7 +149,7 @@ Same example as `/training-events/{id}/instructors`
 }
 ```
 
-**POST**   `/training-events/{id}/trainees/assign`	Assign one or multiple trainees to a training event
+**POST**   `/training-events/{id}/trainees`	Assign one or multiple trainees to a training event
 #### Request:
 ```json
 {
@@ -172,17 +173,42 @@ Same example as `/training-events/{id}/instructors`
 }
 ```
 
-**POST**   `/training-events/{id}/observers/assign` Assign one or multiple observers to a training event
-Same example as `/training-events/{id}/trainees/assign`
+**POST**   `/training-events/{id}/observers` Assign one or multiple observers to a training event
+Same example as `/training-events/{id}/trainees`
 
-**POST**   `/training-events/{id}/instructors/unassign`	Unassign one or multiple instructors to a training event
+**DELETE**   `/training-events/{id}/instructors/{instructorId}`	Unassign one instructor from a training event
+#### Response:
+```json
+204 No content
+```
+
+**DELETE**   `/training-events/{id}/trainees/{traineeId}`	Unassign one trainee from a training event
+
+Same example as `/training-events/{id}/instructors/{instructorId}`
+
+**DELETE**   `/training-events/{id}/observers/{observerId}`	Unassign one observer from a training event
+
+Same example as `/training-events/{id}/instructors/{instructorId}`
+
+**POST**   `/training-events/create-and-update`	Create a training event and execute commands to create and update entities
 #### Request:
 ```json
 {
-  "items": [
-    { "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df", "etag": "3" },
-    { "id": "9d7fb320-38ed-441c-9bb7-10fd78f508d5", "etag": "9" },
-    { "id": "ff15434d-e12a-43fe-936d-665de3c58532", "etag": "4" }
+  "projectId": "de802551-2c47-4323-9779-d74876aa0c3f",
+  "name": "A320 Training - Session 1",
+  "startDate": "2026-12-01T09:00:00Z",
+  "endDate": "2026-12-12T11:00:00Z"
+  "commands": [
+    {
+      "assignInstructor": {
+        "instructor": { "assigneeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6" }
+      }
+    },
+    {
+      "assignTrainee": {
+        "instructor": { "assigneeId": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" }
+      }
+    }
   ]
 }
 ```
@@ -190,21 +216,39 @@ Same example as `/training-events/{id}/trainees/assign`
 ```json
 200 OK
 
-{
-  "content": [
-    { "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df" },
-    { "id": "9d7fb320-38ed-441c-9bb7-10fd78f508d5" }
-  ],
-  "failed": [
-    { "id": "ff15434d-e12a-43fe-936d-665de3c58532" }
+{ 
+  "responses": [
+    { "added" : { "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df" } },
+    { "updated": {} }
   ]
 }
 ```
 
-**POST**   `/training-events/{id}/trainees/unassign`	Unassign one or multiple trainees to a training event
+**POST**   `/training-events/{id}/batch-update/all-or-none` Perform multiple updates in the training event aggregate
+#### Request:
+```json
+If-Match: "13"
+{
+  "commands": [
+    {
+      "unassignTrainee": [
+        { "trainee": { "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6" } },
+        { "trainee": { "id": "eadb8f24-9e02-4109-a93a-2e29b7de644c" } },
+        { "trainee": { "id": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" } }
+      ]
+    }
+  ]
+}
+```
+#### Response:
+```json
+200 OK
+ETag: "16"
 
-Same example as `/training-events/{id}/instructors/unassign`
-
-**POST**   `/training-events/{id}/observers/unassign`	Unassign one or multiple observers to a training event
-
-Same example as `/training-events/{id}/instructors/unassign`
+{ 
+  "responses": [
+    { "added" : { } },
+    { "updated": { "id": "0c0bb51d-2d37-4f46-8104-579e6e59bd5b" } }
+  ]
+}
+```

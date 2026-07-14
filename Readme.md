@@ -7,7 +7,7 @@
 ETag: "5"
 
 {
-	"id": "34f34122-2227-4572-a2bc-2c2355f81afa6",
+	"id": "34f34122-2227-4572-a2bc-2c2355f81af6",
 	"startDate": "2026-12-01T09:00:00Z", 
 	"endDate": "2026-12-12T11:00:00Z",
 	"name": "A320 Training",
@@ -114,10 +114,7 @@ ETag: "8"
       "assigneeId": "de802551-2c47-4323-9779-d74876aa0c3f",
       "etag": "16"
     }
-  ],
-  "totalElements": 1, 
-  "totalPages": 1, 
-  "pageNumber": 1
+  ]
 }
 ```
 
@@ -129,51 +126,41 @@ Same example as `/training-events/{id}/instructors`
 
 Same example as `/training-events/{id}/instructors`
 
-**POST**   `/training-events/{id}/instructors`	Assign one or multiple instructors to a training event
+**POST**   `/training-events/{id}/instructors`	Assign one instructor to a training event
 #### Request:
 ```json
 {
-  "items": [
-    { "assigneeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6" }
-  ]
+  "assigneeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
 #### Response:
 ```json
-200 OK
+201 Created
 
-{ 
-	"content": [ 
-		{ "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df", "assigneeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6", "etag": "8" } 
-	] 
+{
+  "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df", 
+  "assigneeId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
 
-**POST**   `/training-events/{id}/trainees`	Assign one or multiple trainees to a training event
+**POST**   `/training-events/{id}/trainees`	Assign one trainee to a training event
 #### Request:
 ```json
 {
-  "items": [
-    { "assigneeId": "454c2121-4a06-4c61-bffd-717b035d77de" },
-    { "assigneeId": "fe61665c-8dbb-49f8-9545-43c60824e409" },
-    { "assigneeId": "7ea17f16-12fa-408a-9cc3-292448a50f67" }
-  ]
+  "assigneeId": "454c2121-4a06-4c61-bffd-717b035d77de"
 }
 ```
 #### Response:
 ```json
-200 OK
+201 Created
 
-{ 
-	"content": [ 
-		{ "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df", "assigneeId": "454c2121-4a06-4c61-bffd-717b035d77de", "etag": "3" },
-		{ "id": "9d7fb320-38ed-441c-9bb7-10fd78f508d5", "assigneeId": "fe61665c-8dbb-49f8-9545-43c60824e409", "etag": "9" },
-		{ "id": "ff15434d-e12a-43fe-936d-665de3c58532", "assigneeId": "7ea17f16-12fa-408a-9cc3-292448a50f67", "etag": "4" }
-	] 
+{
+  "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df", 
+  "assigneeId": "454c2121-4a06-4c61-bffd-717b035d77de"
 }
 ```
 
-**POST**   `/training-events/{id}/observers` Assign one or multiple observers to a training event
+**POST**   `/training-events/{id}/observers` Assign one observer to a training event
 Same example as `/training-events/{id}/trainees`
 
 **DELETE**   `/training-events/{id}/instructors/{instructorId}`	Unassign one instructor from a training event
@@ -197,7 +184,7 @@ Same example as `/training-events/{id}/instructors/{instructorId}`
   "projectId": "de802551-2c47-4323-9779-d74876aa0c3f",
   "name": "A320 Training - Session 1",
   "startDate": "2026-12-01T09:00:00Z",
-  "endDate": "2026-12-12T11:00:00Z"
+  "endDate": "2026-12-12T11:00:00Z",
   "commands": [
     {
       "assignInstructor": {
@@ -206,7 +193,7 @@ Same example as `/training-events/{id}/instructors/{instructorId}`
     },
     {
       "assignTrainee": {
-        "instructor": { "assigneeId": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" }
+        "trainee": { "assigneeId": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" }
       }
     }
   ]
@@ -218,8 +205,11 @@ Same example as `/training-events/{id}/instructors/{instructorId}`
 
 { 
   "responses": [
-    { "added" : { "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df" } },
-    { "updated": {} }
+    { "added" : [
+      { "id": "a0a43a72-fdda-4fe5-9034-ec2e0f84a0df" },
+      { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7"} ]
+    },
+    { "updated": { "id": "454c2121-4a06-4c61-bffd-717b035d77de"} }
   ]
 }
 ```
@@ -231,11 +221,19 @@ If-Match: "13"
 {
   "commands": [
     {
-      "unassignTrainee": [
-        { "trainee": { "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6" } },
-        { "trainee": { "id": "eadb8f24-9e02-4109-a93a-2e29b7de644c" } },
-        { "trainee": { "id": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" } }
-      ]
+      "unassignTrainee": { 
+        "trainee": { "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6" }
+      }
+    },
+    {
+      "unassignTrainee": {
+        "trainee": { "id": "eadb8f24-9e02-4109-a93a-2e29b7de644c" }
+      }
+    },
+    {
+      "unassignTrainee": {
+        "trainee": { "id": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" }
+      }
     }
   ]
 }
@@ -248,7 +246,12 @@ ETag: "16"
 { 
   "responses": [
     { "added" : { } },
-    { "updated": { "id": "0c0bb51d-2d37-4f46-8104-579e6e59bd5b" } }
+    { "updated" : { } },
+    { "removed": [
+      { "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6" },
+      { "id": "eadb8f24-9e02-4109-a93a-2e29b7de644c" },
+      { "id": "d2c2bbd1-d883-462a-8155-a6e6d786ae1c" }] 
+    }
   ]
 }
 ```
